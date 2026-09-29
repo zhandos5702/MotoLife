@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мото-увлечение — сайт-визитка</title>
+
+  <style>
+    :root {
+      --bg: #0d0f12;
+      --card: #171a1f;
+      --border: #292d33;
+      --text: #f5f5f5;
+      --muted: #9da1a7;
+
+      --accent: #FFC914;
+      --accent-light: #FDE74C;
+      --accent-soft: #FFD151;
+      --accent-dark: #FFBE0B;
+    }
+
+    body.light {
+      --bg: #fffdf5;
+      --card: #ffffff;
+      --border: #e5dfc9;
+      --text: #171717;
+      --muted: #666666;
+
+      --accent: #FFBE0B;
+      --accent-light: #FDE74C;
+      --accent-soft: #FFD151;
+      --accent-dark: #FFC914;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+      position: relative;
+      padding: 80px 20px 60px;
+      text-align: center;
+
+      background: radial-gradient(
+        circle at top,
+        rgba(255, 201, 20, 0.18) 0%,
+        var(--bg) 60%
+      );
+    }
+
+    header h1 {
+      font-size: clamp(42px, 8vw, 82px);
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: -3px;
+      margin-bottom: 20px;
+    }
+
+    header h1 span {
+      color: var(--accent);
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Кнопка переключения темы */
+    .theme-button {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+
+      width: 48px;
+      height: 48px;
+
+      border: 1px solid var(--border);
+      border-radius: 50%;
+
+      background: var(--card);
+      color: var(--text);
+
+      font-size: 22px;
+      cursor: pointer;
+
+      transition: 0.3s ease;
+    }
+
+    .theme-button:hover {
+      transform: scale(1.08);
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(255, 201, 20, 0.35);
+    }
+
+    main {
+      width: min(1100px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 20px 0 80px;
+      flex: 1;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      min-height: 400px;
+
+      transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.3s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 30px rgba(255, 201, 20, 0.12);
+    }
+
+    /* Картинка мотоцикла */
+    .card img {
+      display: block;
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+
+      transition: transform 0.4s ease;
+    }
+
+    .card:hover img {
+      transform: scale(1.05);
+    }
+
+    .card-content {
+      padding: 28px 32px 32px;
+    }
+
+    .icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+    }
+
+    .card h2 {
+      font-size: 24px;
+      margin-bottom: 14px;
+    }
+
+    .card p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer a:hover {
+      color: var(--accent-light);
+      text-decoration: underline;
+    }
+
+    /* Кнопка "Наверх" */
+    .top-button {
+      position: fixed;
+      right: 25px;
+      bottom: 25px;
+
+      width: 50px;
+      height: 50px;
+
+      border: none;
+      border-radius: 50%;
+
+      background: var(--accent);
+      color: #171717;
+
+      font-size: 25px;
+      font-weight: bold;
+
+      cursor: pointer;
+
+      opacity: 0;
+      visibility: hidden;
+
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        visibility 0.3s ease,
+        background 0.3s ease;
+    }
+
+    .top-button.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .top-button:hover {
+      transform: translateY(-5px);
+      background: var(--accent-light);
+      box-shadow: 0 0 20px rgba(255, 201, 20, 0.4);
+    }
+
+    @media (max-width: 800px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        padding: 60px 20px 40px;
+      }
+
+      .card {
+        min-height: auto;
+      }
+
+      .card img {
+        height: 230px;
+      }
+    }
+  </style>
+</head>
+
+<body id="top">
+
+  <header>
+    <button
+      class="theme-button"
+      id="themeButton"
+      aria-label="Переключить тему">
+      ☀️
+    </button>
+
+    <h1>Мото<span>жизнь</span></h1>
+
+    <p>
+      Дорога, скорость и люди, которые понимают мотоциклы
+      с одного взгляда.
+    </p>
+  </header>
+
+  <main>
+    <section class="cards">
+
+      <!-- Карточка 1 -->
+      <article class="card">
+
+        <img
+          src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=80"
+          alt="Чёрный мотоцикл"
+        >
+
+        <div class="card-content">
+          <div class="icon"></div>
+
+          <h2>МотоСообщество</h2>
+
+          <p>
+            Общаемся о мотоциклах, маршрутах, технике, экипировке
+            и делимся личным опытом.
+          </p>
+        </div>
+
+      </article>
+
+      <!-- Карточка 2 -->
+      <article class="card">
+
+        <img
+          src="https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&w=900&q=80"
+          alt="Мотоцикл на дороге"
+        >
+
+        <div class="card-content">
+          <div class="icon"></div>
+
+          <h2>МотоТусовки</h2>
+
+          <p>
+            Собираемся по вечерам, смотрим тематические фильмы
+            и обсуждаем самые интересные истории из мира мототехники.
+          </p>
+        </div>
+
+      </article>
+
+      <!-- Карточка 3 -->
+      <article class="card">
+
+        <img
+          src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=900&q=80"
+          alt="Спортивный мотоцикл"
+        >
+
+        <div class="card-content">
+          <div class="icon"></div>
+
+          <h2>Прокат оборудования</h2>
+
+          <p>
+            Экипировка и полезное оборудование для тех,
+            кто хочет попробовать мотоциклы без лишних покупок.
+          </p>
+        </div>
+
+      </article>
+
+    </section>
+  </main>
+
+  <footer>
+    Связаться:
+    <a href="mailto:hello@example.com">
+      hello@example.com
+    </a>
+  </footer>
+
+  <!-- Кнопка наверх -->
+  <button
+    class="top-button"
+    id="topButton"
+    aria-label="Наверх">
+    ↑
+  </button>
+
+  <script>
+    const themeButton = document.getElementById("themeButton");
+    const topButton = document.getElementById("topButton");
+
+    // Переключение темы
+    themeButton.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+
+      if (document.body.classList.contains("light")) {
+        themeButton.textContent = "🌙";
+      } else {
+        themeButton.textContent = "☀️";
+      }
+    });
+
+    // Показываем кнопку "Наверх" после прокрутки
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        topButton.classList.add("show");
+      } else {
+        topButton.classList.remove("show");
+      }
+    });
+
+    // Возврат наверх
+    topButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  </script>
+
+</body>
+</html>
